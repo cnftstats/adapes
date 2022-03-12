@@ -7,7 +7,7 @@ library(httr)
 
 # Variables ----------------------------------------------------------------------------------------
 policy_id <- "dac355946b4317530d9ec0cb142c63a4b624610786c2a32137d78e25"
-project <- "The ADApes Society"
+project <- "The Ape Society"
 project_label <- "adapes"
 time_now <- as_datetime(now())
 
