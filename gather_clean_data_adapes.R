@@ -146,15 +146,22 @@ JPG <- JPG[, .(asset, asset_number, type = "listing", price, last_offer = NA, sc
 
 
 # JPG sales ----------------------------------------------------------------------------------------
-api_link <- sprintf("jpg.store/api/policy/%s/sales", policy_id)
+# api_link <- sprintf("jpg.store/api/policy/%s/sales", policy_id)
+# 
+# JPGS <- data.table(fromJSON(rawToChar(GET(api_link)$content)))
 
-JPGS <- data.table(fromJSON(rawToChar(GET(api_link)$content)))
-JPGS[, price         := price_lovelace]
+JPGS_list <- lapply(1:5, function(i) {
+  api_link <- sprintf("jpg.store/api/policy/%s/sales/%d", policy_id, i)
+  data.table(fromJSON(rawToChar(GET(api_link)$content)))
+})
+
+JPGS <- rbindlist(JPGS_list)
+
+JPGS[, price         := as.numeric(price_lovelace)/10**6]
 JPGS[, asset         := asset_display_name]
 JPGS[, asset_number  := extract_num(asset)]
-JPGS[, price         := price/10**6]
 JPGS[, market        := "jpg.store"]
-JPGS[, sold_at       := as_datetime(purchased_at)]
+JPGS[, sold_at       := as_datetime(confirmed_at)]
 JPGS[, sold_at_hours := difftime(time_now, sold_at, units = "hours")]
 JPGS[, sold_at_days  := difftime(time_now, sold_at, units = "days")]
 
