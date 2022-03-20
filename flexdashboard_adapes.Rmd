@@ -1,5 +1,5 @@
 ---
-title: "The Ape Society Dashboard"
+title: "CNFTSTATS - The Ape Society"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
