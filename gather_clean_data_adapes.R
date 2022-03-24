@@ -183,17 +183,28 @@ DTS <- rbindlist(list(CNFTS, JPGS), fill = TRUE, use.names = TRUE)
 DT[, data_date := time_now]
 DTS[, data_date := time_now]
 
+
 # Rarity and ranking -------------------------------------------------------------------------------
 # Fix for merge
+DT[, asset := gsub("Ã‰", "É", asset)]
+DT[, asset := gsub("Ã©", "é", asset)]
+DT[, asset := gsub("cÃ­a", "cía", asset)]
+DT[, asset := gsub("Ã¡", "á", asset)]
+DT[, asset := gsub("Ã¨", "è", asset)]
+
+DTS[, asset := gsub("Ã‰", "É", asset)]
+DTS[, asset := gsub("Ã©", "é", asset)]
+DTS[, asset := gsub("cÃ­a", "cía", asset)]
+DTS[, asset := gsub("Ã¡", "á", asset)]
+DTS[, asset := gsub("Ã¨", "è", asset)]
+
 DT[, asset_name := paste0("adape", asset)]
 DT[, asset_name := gsub(" ", "", asset_name)]
 DT[, asset_name := gsub("'", "", asset_name)]
-DT[asset_name == "adapeNA", asset_name := NA]
 
 DTS[, asset_name := paste0("adape", asset)]
 DTS[, asset_name := gsub(" ", "", asset_name)]
 DTS[, asset_name := gsub("'", "", asset_name)]
-DTS[asset_name == "adapeNA", asset_name := NA]
 
 setDT(DT); setDT(RAR)
 loj(DT, RAR, "asset_name")
