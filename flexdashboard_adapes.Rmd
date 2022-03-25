@@ -1,5 +1,5 @@
 ---
-title: "CNFTSTATS - The Ape Society"
+title: "CNFTSTATS"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -77,7 +77,7 @@ $(document).ready(function(){
 
 # Sidebar {data-width=80, .sidebar}
 <ul id="sidebar_ul">
-  <li id="currentProject"><a href="https://cnftstats.github.io/adapes">ApesSociety</a></li>
+  <li id="currentProject"><a href="https://cnftstats.github.io/adapes">ApeSociety</a></li>
   <li><a href="https://cnftstats.github.io/bcrc">BCRC</a></li>
   <li><a href="https://cnftstats.github.io/bossplanet">BossPlanet</a></li>
   <li><a href="https://cnftstats.github.io/chilledkongs">ChilledKongs</a></li>
@@ -360,6 +360,60 @@ datatable(X, class = 'compact stripe hover',
           escape = FALSE) %>%
   formatStyle(columns = 1:ncol(X), fontSize = '90%')
 ```
+
+<!-- # Valuation -->
+<!-- ## Column 1 -->
+<!-- ### Valuate your NFT -->
+<!-- ```{r} -->
+<!-- Y <- DTL[, .SD[price == min(price)], .(trait_category, trait)][order(trait_category, trait)] -->
+<!-- Y <- Y[, .(trait_category, trait, price, asset_rank, market, asset_traits)] -->
+<!-- Y[, trait_category_id := paste0(trait_category, "_", trait)] -->
+
+<!-- .cols <- names(RAR)[names(RAR) %like% "^asset_trait_"] -->
+<!-- V <- data.table(tidyr::gather(RAR, key, trait_category_id, all_of(.cols))) -->
+<!-- V[, trait_category := strsplit(trait_category_id, "_")[[1]][1], 1:nrow(V)] -->
+<!-- V[, trait_category := gsub("\\.", " ", trait_category)] -->
+<!-- V[, trait          := strsplit(trait_category_id, "_")[[1]][2], 1:nrow(V)] -->
+
+<!-- loj(V, Y[, .(trait_category_id, price)], "trait_category_id") -->
+
+<!-- V <- V[, .(asset_name, asset_rank, best_trait = trait_category_id, value_best_trait = price)] -->
+<!-- V <- V[, .SD[value_best_trait == max(value_best_trait)], asset_name] -->
+<!-- V <- V[order(value_best_trait, asset_name)] -->
+<!-- V[, best_trait_list := paste(best_trait, collapse = " - "), asset_name] -->
+<!-- V <- V[, .(asset_name, asset_rank, best_trait_list, value_best_trait)] %>% unique -->
+<!-- V[, value_collection_floor := min(DT$price)] -->
+
+<!-- margin_rank <- floor(2.5/100 * max(RAR$asset_rank)) -->
+<!-- V[, value_rank := { -->
+<!--   .rank <- asset_rank -->
+<!--   .min_rank_low <- DT[asset_rank %between% c(.rank - margin_rank, .rank), min(price)] -->
+<!--   .min_rank_high <- DT[asset_rank %between% c(.rank, .rank + margin_rank), min(price)] -->
+
+<!--   floor((.min_rank_low + .min_rank_high)/2) -->
+
+<!--   # DT[asset_rank %between% c(.rank - margin_rank, .rank + margin_rank), round(median(price), 0)] -->
+<!-- }, 1:nrow(V)] -->
+
+
+<!-- V[, .(asset_name, value_collection_floor, -->
+<!--       best_trait_list, value_best_trait,  -->
+<!--       asset_rank, value_rank)] %>%  -->
+<!-- datatable(class = 'compact stripe hover', -->
+<!--           options = list(pageLength = 30, -->
+<!--                          scrollY = '100%', -->
+<!--                          bLengthChange = FALSE, -->
+<!--                          bPaginate = TRUE, -->
+<!--                          info = TRUE, -->
+<!--                          columnDefs = list(list(className = 'dt-right', targets = "_all"))), -->
+<!--           colnames = c("Asset", "Value</br>Collection floor", -->
+<!--                        "Best trait(s)", "Value</br>Best trait(s)", -->
+<!--                        "Rank", "Value</br>Rank"), -->
+<!--           filter = "top", -->
+<!--           rownames = FALSE, -->
+<!--           escape = FALSE) %>% -->
+<!--   formatStyle(columns = 1:ncol(X), fontSize = '90%') -->
+<!-- ``` -->
 
 # Search {data-icon="ion-android-search"}
 ## Column 1
