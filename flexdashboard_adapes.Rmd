@@ -612,12 +612,10 @@ datatable(X, class = 'compact stripe hover',
 
 > Use the search box to look for your NFT. For example, search `#3000`.
 
-# Support this project {data-icon="ion-heart"}
+# Buy me a coffee {data-icon="ion-coffee"}
 ## Column 1
 ### Thanks for your support!
-You can support this project by spreading the word about it to the CNFT community! :-)
-
-Tips would also be greatly appreciated! This would encourage me to maintain and improve the website (for instance, to get a better hosting service).  
+Tips would be greatly appreciated! This would encourage me to maintain and improve the website (for instance, to get a better hosting service).  
 
 ![Tip me](tipme.svg){width=200px}  
 **addr1qx04gwr9kazlpnm6t8a8h0pggk440zs3fdayct732a0wwwd3usryhnh52pevj5xy7cgp9d4jnywar6g0tnct58dyfukszl25n8** 
