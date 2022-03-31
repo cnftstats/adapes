@@ -327,7 +327,7 @@ ggplot(X, aes(x_label, N, fill = market)) +
 
 
 ## Column 2 {data-width=300, .tabset}
-### Sweep that floor: Lowest listings by class
+### Lowest listings by class
 ```{r}
 X <- DT[, .SD[price == min(price)], asset_trait_class]
 X[, asset_class := gsub("class_", "", asset_trait_class)]
@@ -355,7 +355,7 @@ datatable(X, class = 'compact stripe hover',
   formatStyle(columns = 1:ncol(X), fontSize = '90%')
 ```
 
-### Sweep that floor: Overall lowest listings
+### Overall lowest listings
 ```{r}
 X <- DT[order(price)][1:15]
 X[, img := sprintf('<img src="%s%s.png" class="img_html">', img_link, gsub("adape", "", asset_name))]
@@ -384,6 +384,9 @@ datatable(X, class = 'compact stripe hover nowrap',
 ## Column 1 {data-width=700, .tabset}
 ### Listings x rank
 ```{r}
+min_x <- 1
+max_x <- RAR[, max(asset_rank)]
+min_y <- 0
 max_y <- max(DT[, quantile(price, probs = .90)], DTS[, max(price)])
 X <- DT[price <= max_y]
 scale_x <- c(seq(0, 2000, 250), seq(2500, 10000, 500))
@@ -415,8 +418,8 @@ gg <- ggplot(X, aes(asset_rank, price, color = asset_class, customdata = custom_
                                   "</br></br>", paste("Price:", round(price, 0),
                                                       "</br>Rank:", asset_rank)))) +
   geom_point(alpha = .6) +
-  scale_x_reverse(breaks = scale_x, expand = c(0.03, 0)) +
-  scale_y_continuous(n.breaks = 15, limits = c(0, max_y)) +
+  scale_x_reverse(breaks = scale_x, expand = c(0.03, 0), limits = c(max_x, min_x)) +
+  scale_y_continuous(n.breaks = 15, limits = c(min_y, max_y)) +
   labs(x = "Rank", y = "Listing price", color = "Class") +
   theme(legend.title = element_text(size = 10),
         legend.text = element_text(size = 9))
@@ -465,8 +468,9 @@ gg <- ggplot(X, aes(asset_rank, price, color = asset_class, customdata = custom_
                                   "</br></br>", paste("Price:", round(price, 0),
                                                       "</br>Rank:", asset_rank)))) +
   geom_point(alpha = .6) +
-  scale_x_reverse(breaks = scale_x, expand = c(0.03, 0)) +
-  scale_y_continuous(n.breaks = 15, limits = c(0, max_y)) +
+  scale_x_reverse(breaks = scale_x, expand = c(0.03, 0), limits = c(max_x, min_x)) +
+  scale_y_continuous(n.breaks = 15, limits = c(min_y
+                                               , max_y)) +
   labs(x = "Rank", y = "Sales price", color = "Class") +
   theme(legend.title = element_text(size = 10),
         legend.text = element_text(size = 9))
