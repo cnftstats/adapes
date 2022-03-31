@@ -326,8 +326,8 @@ ggplot(X, aes(x_label, N, fill = market)) +
 ```
 
 
-## Column 2 {data-width=300, .tabset}
-### Lowest listings by class
+## Column 2 {data-width=300}
+### Sweep that floor: Lowest listings by class
 ```{r}
 X <- DT[, .SD[price == min(price)], asset_trait_class]
 X[, asset_class := gsub("class_", "", asset_trait_class)]
@@ -355,7 +355,7 @@ datatable(X, class = 'compact stripe hover',
   formatStyle(columns = 1:ncol(X), fontSize = '90%')
 ```
 
-### Overall lowest listings
+### Sweep that floor: Overall lowest listings
 ```{r}
 X <- DT[order(price)][1:15]
 X[, img := sprintf('<img src="%s%s.png" class="img_html">', img_link, gsub("adape", "", asset_name))]
