@@ -146,6 +146,7 @@ ggplot(X, aes(x_label, N, fill = market, alpha = data_when)) +
   geom_text(aes(label = stat(y), group = x_label),
             stat = 'summary', fun = sum, vjust = -.5, hjust = +.55,
             color = "steelblue4", size = 3) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
   scale_fill_manual(values = c("jpg.store" = "steelblue3", "cnft.io" = "steelblue4")) +
   scale_alpha_manual(values = c(0.9, 0.7), guide = "none") +
   labs(x = "Price range", y = "Number of listings", fill = "", caption = .caption) +
@@ -191,12 +192,14 @@ X[price_range >= 30000,                x_label := "30000+"]
 .X <- X[, .(price_range, x_label)] %>% unique %>% .[order(price_range)]
 X[, x_label := factor(x_label, levels = .X$x_label)]
 X[, market  := factor(market, levels = c("jpg.store", "cnft.io"))]
+
 ggplot(X, aes(x_label, N, fill = market)) +
   facet_wrap(.~asset_class, nrow = 3, ncol = 3) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = stat(y), group = x_label),
             stat = 'summary', fun = sum, vjust = -.5, hjust = +.55,
             color = "steelblue4", size = 3) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
   scale_fill_manual(values = c("jpg.store" = "steelblue3", "cnft.io" = "steelblue4")) +
   scale_alpha_manual(values = 0.9, guide = "none") +
   labs(x = "Price range", y = "Number of listings", fill = "", caption = .caption) +
@@ -252,7 +255,7 @@ ggplot(X, aes(x_label, N, fill = market, alpha = sold_time)) +
   geom_text(aes(label = stat(y), group = x_label),
             stat = 'summary', fun = sum, vjust = -.5, hjust = +.55,
             color = "springgreen4", size = 3) +
-  scale_y_continuous(expand = c(0, 20)) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
   scale_fill_manual(values = c("jpg.store" = "springgreen3", "cnft.io" = "springgreen4")) +
   scale_alpha_manual(values = c("0-24h ago" = .9, "24-48h ago" = .8, "48-72h ago" = .7), guide = "none") +
   labs(x = "Price range", y = "Number of sales", fill = "",
@@ -303,12 +306,14 @@ X[price_range >= 30000,                x_label := "30000+"]
 .X <- X[, .(price_range, x_label)] %>% unique %>% .[order(price_range)]
 X[, x_label := factor(x_label, levels = .X$x_label)]
 X[, market  := factor(market, levels = c("jpg.store", "cnft.io"))]
+
 ggplot(X, aes(x_label, N, fill = market)) +
   facet_wrap(.~asset_class, nrow = 3, ncol = 3) +
   geom_bar(stat = "identity") +
   geom_text(aes(label = stat(y), group = x_label),
             stat = 'summary', fun = sum, vjust = -.5, hjust = +.55,
             color = "steelblue4", size = 3) +
+  scale_y_continuous(expand = expansion(mult = c(0, .1))) +
   scale_fill_manual(values = c("jpg.store" = "springgreen3", "cnft.io" = "springgreen4")) +
   scale_alpha_manual(values = 0.9, guide = "none") +
   labs(x = "Price range", y = "Number of listings", fill = "", caption = .caption) +
