@@ -119,7 +119,6 @@ X[price %between% c(2000, 4999),   price_range := trunc(price/500)*500]
 X[price %between% c(5000, 9999),   price_range := trunc(price/1000)*1000]
 X[price %between% c(10000, 29999), price_range := trunc(price/10000)*10000]
 X[price >= 30000,                  price_range := 30000]
-X <- X[complete.cases(price_range), .(price_range, price, market, data_when)]
 
 CAP <- X[, .(floor = min(price), listings = .N), data_when]
 .caption <- paste0(
@@ -127,7 +126,6 @@ CAP <- X[, .(floor = min(price), listings = .N), data_when]
   sprintf("\n%sh ago: Floor = %s | Listings = %s", .hours_ago, CAP[2, floor], CAP[2, listings]),
   "\nSource: https://cnftstats.github.io/"
 )
-
 
 X <- X[, .N, .(price_range, market, data_when)][order(price_range)]
 X[price_range %between% c(0, 1999),    x_label := paste0(price_range, "-", price_range + (100-1))]
@@ -170,7 +168,7 @@ X[price %between% c(2000, 4999),   price_range := trunc(price/500)*500]
 X[price %between% c(5000, 9999),   price_range := trunc(price/1000)*1000]
 X[price %between% c(10000, 29999), price_range := trunc(price/10000)*10000]
 X[price >= 30000,                  price_range := 30000]
-X <- X[complete.cases(price_range), .(price_range, price, market, asset_trait_class)]
+
 X[, asset_class := gsub("class_", "", asset_trait_class)]
 X[, asset_class := factor(asset_class,
                           levels = rev(c("Kings", "Nobles", "Royal Advisors", "Military Officers",
@@ -183,6 +181,7 @@ CAP_all <- X[, .(asset_class = "All", floor = min(price),
 CAP <- rbind(CAP_all, CAP)
 .pattern <- "%s: Floor = %d | Median = %d | Listings = %d"
 .caption <- paste0(CAP[, sprintf(.pattern, asset_class, floor, median, listings)], collapse = "\n")
+
 X <- X[, .N, .(price_range, market, asset_class)][order(price_range)]
 X[price_range %between% c(0, 1999),    x_label := paste0(price_range, "-", price_range + (100-1))]
 X[price_range %between% c(2000, 4999), x_label := paste0(price_range, "-", price_range + (500-1))]
@@ -228,7 +227,6 @@ X[price %between% c(2000, 4999),   price_range := trunc(price/500)*500]
 X[price %between% c(5000, 9999),   price_range := trunc(price/1000)*1000]
 X[price %between% c(10000, 29999), price_range := trunc(price/10000)*10000]
 X[price >= 30000,                  price_range := 30000]
-X <- X[complete.cases(price_range), .(price_range, price, market, sold_time)]
 
 CAP <- X[, .(sale_range = sprintf("%s-%s", min(price), max(price)),
              sales = .N, volume = sum(price)/1000), sold_time]
@@ -283,7 +281,7 @@ X[price %between% c(2000, 4999),   price_range := trunc(price/500)*500]
 X[price %between% c(5000, 9999),   price_range := trunc(price/1000)*1000]
 X[price %between% c(10000, 29999), price_range := trunc(price/10000)*10000]
 X[price >= 30000,                  price_range := 30000]
-X <- X[complete.cases(price_range), .(price_range, price, market, asset_trait_class)]
+
 X[, asset_class := gsub("class_", "", asset_trait_class)]
 X[, asset_class := factor(asset_class,
                           levels = rev(c("Kings", "Nobles", "Royal Advisors", "Military Officers",
@@ -332,34 +330,6 @@ ggplot(X, aes(x_label, N, fill = market)) +
 
 
 ## Column 2 {data-width=300}
-### Sweep that floor: Lowest listings by class
-```{r}
-X <- DT[, .SD[price == min(price)], asset_trait_class]
-X[, asset_class := gsub("class_", "", asset_trait_class)]
-X[, asset_class := factor(asset_class,
-                          levels = c("Kings", "Nobles", "Royal Advisors", "Military Officers",
-                                     "Merchants", "Explorers", "Artists", "Craftsmen"))]
-
-X[, img := sprintf('<img src="%s%s.png" class="img_html">', img_link, gsub("adape", "", asset_name))]
-X[, img := sprintf('<a href="%s" target="_blank">%s</br>#%s</a>', link, img, gsub("adape", "", asset_name))]
-
-X <- X[, .(asset_class, img, price, asset_rank, market)][order(asset_class)]
-X <- X[complete.cases(X)]
-
-datatable(X, class = 'compact stripe hover',
-          options = list(dom = "t",
-                         pageLength = 100,
-                         scrollY = '100%',
-                         bLengthChange = FALSE,
-                         bPaginate = FALSE,
-                         info = FALSE,
-                         columnDefs = list(list(className = 'dt-right', targets = "_all"))),
-          colnames = c("Class", "Asset", "Price", "Rank", "Market"),
-          rownames = FALSE,
-          escape = FALSE) %>%
-  formatStyle(columns = 1:ncol(X), fontSize = '90%')
-```
-
 ### Sweep that floor: Overall lowest listings
 ```{r}
 X <- DT[order(price)][1:15]
@@ -378,6 +348,34 @@ datatable(X, class = 'compact stripe hover nowrap',
                          info = FALSE,
                          columnDefs = list(list(className = 'dt-right', targets = "_all"))),
           colnames = c("Asset", "Price", "Rank", "Market"),
+          rownames = FALSE,
+          escape = FALSE) %>%
+  formatStyle(columns = 1:ncol(X), fontSize = '90%')
+```
+
+### Sweep that floor: Lowest listings by class
+```{r}
+X <- DT[, .SD[price == min(price)], asset_trait_class]
+X[, asset_class := gsub("class_", "", asset_trait_class)]
+X[, asset_class := factor(asset_class,
+                          levels = rev(c("Kings", "Nobles", "Royal Advisors", "Military Officers",
+                                         "Merchants", "Explorers", "Artists", "Craftsmen")))]
+
+X[, img := sprintf('<img src="%s%s.png" class="img_html">', img_link, gsub("adape", "", asset_name))]
+X[, img := sprintf('<a href="%s" target="_blank">%s</br>#%s</a>', link, img, gsub("adape", "", asset_name))]
+
+X <- X[, .(asset_class, img, price, asset_rank, market)][order(asset_class)]
+X <- X[complete.cases(X)]
+
+datatable(X, class = 'compact stripe hover',
+          options = list(dom = "t",
+                         pageLength = 100,
+                         scrollY = '100%',
+                         bLengthChange = FALSE,
+                         bPaginate = FALSE,
+                         info = FALSE,
+                         columnDefs = list(list(className = 'dt-right', targets = "_all"))),
+          colnames = c("Class", "Asset", "Price", "Rank", "Market"),
           rownames = FALSE,
           escape = FALSE) %>%
   formatStyle(columns = 1:ncol(X), fontSize = '90%')
